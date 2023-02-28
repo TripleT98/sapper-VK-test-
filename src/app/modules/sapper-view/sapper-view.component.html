@@ -1,0 +1,35 @@
+<div class="game">
+  <header class="header">
+    <ng-container *ngTemplateOutlet="numbersView;context:{val:(score$ | async)}"></ng-container>
+    <div class="smile-container">
+      <div class="smile">
+        smile
+      </div>
+    </div>
+    <ng-container *ngTemplateOutlet="numbersView;context:{val:(time$ | async)}"></ng-container>
+  </header>
+  <main class="playground">
+
+  </main>
+</div>
+
+
+<!--Показывать время или очки -->
+<ng-template #numbersView let-numberToDisplay="val">
+  {{numberToDisplay}}
+</ng-template>
+
+<!--Ряд ячеек -->
+<ng-template #row let-colunmsAmount="columnsAmount">
+  <div class="row">
+    <ng-container></ng-container>
+  </div>
+</ng-template>
+
+
+<!-- Ячейка -->
+<ng-template #cell>
+  <div class="cell">
+    c
+  </div>
+</ng-template>

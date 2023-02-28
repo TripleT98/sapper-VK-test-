@@ -1,0 +1,21 @@
+.game{
+
+  .header{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid black;
+  }
+  .playground{
+    .row{
+      display: flex;
+      width: max-content;
+    }
+    .cell{
+      width: 20px;
+      height: 20px;
+      box-sizing: border-box;
+      border: 1px solid black;
+    }
+  }
+}
