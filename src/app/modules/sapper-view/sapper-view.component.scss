@@ -1,14 +1,30 @@
+$backColor: rgb(192,192,192);
+$shadowColor: rgb(123,123,123);
+
+@mixin shadow{
+  box-shadow: inset 1px 1px 3px $shadowColor;
+}
+
 .game{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: max-content;
+  padding: 10px;
+  background-color: $backColor;
   .header{
+    width: 100%;
     display: flex;
     justify-content: space-between;
     padding: 10px;
-    border: 1px solid black;
+    box-sizing: border-box;
+    @include shadow;
     .nums{
       display: flex;
     }
   }
   .playground{
+    @include shadow;
     width: max-content;
     margin: 0px;
     cursor: pointer;

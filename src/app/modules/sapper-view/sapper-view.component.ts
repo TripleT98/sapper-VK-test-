@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ViewChildren, ElementRef, AfterViewInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SapperGameService, GameStatus } from  '@services/game.service';
 import { Cell, State } from '@interfaces/cell';
 import { SmileStatus } from '@interfaces/smile';
@@ -41,8 +41,8 @@ export class SapperViewComponent implements OnInit, AfterViewInit {
     }
   }))
   public form = new FormGroup({
-    width: new FormControl(this.matrix$.value?.length || 0),
-    height: new FormControl(this.matrix$.value?.[0]?.length || 0),
+    width: new FormControl(this.matrix$.value?.length || 0, [Validators.min(8), Validators.max(64)]),
+    height: new FormControl(this.matrix$.value?.[0]?.length || 0, [Validators.min(8), Validators.max(64)]),
   })
 
   constructor(
