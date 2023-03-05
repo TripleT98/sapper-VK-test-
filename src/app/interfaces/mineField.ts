@@ -228,6 +228,7 @@ export class Field implements IField{
       })
     })
     this.score$.next(this.bombsAmount$.value - flagsAmount);
+
     if(isBombOpened){
       this.explode$.next(true);
       return;
@@ -251,7 +252,7 @@ export class Field implements IField{
           cell.setState(State.opened);
           matrix[i][j] = Object.setPrototypeOf({...cell}, Object.getPrototypeOf(cell));
         }else if(state === State.marked && !cell.isBomb && status === CellStatus.flag){
-          cell.setState(State.opened);
+          cell.setState(State.closed);
           cell.setStatus(CellStatus.bombMarkedWrong);
           matrix[i][j] = Object.setPrototypeOf({...cell}, Object.getPrototypeOf(cell));
         }

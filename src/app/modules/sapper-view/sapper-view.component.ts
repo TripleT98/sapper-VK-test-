@@ -53,7 +53,7 @@ export class SapperViewComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(){
-    this.playgoundDown$ = fromEvent(this.playground.nativeElement, 'mousedown').pipe(filter(()=>!this.cantClick()), mapTo(SmileStatus.onLMKDown));
+    this.playgoundDown$ = fromEvent(this.playground.nativeElement, 'mousedown').pipe(filter((e: any)=>!this.cantClick() && e.which === 1 ), mapTo(SmileStatus.onLMKDown));
     this.playgoundUp$ = fromEvent(this.playground.nativeElement, 'mouseup').pipe(filter(()=>!this.cantClick()), mapTo(SmileStatus.onGame));
     fromEvent(this.smile.nativeElement, 'click').subscribe(()=>{this.gameS.restartGame()});
     fromEvent(this.button.nativeElement, 'click').pipe(withLatestFrom(this.form.valueChanges)).subscribe(([_, {width,height}])=>{
