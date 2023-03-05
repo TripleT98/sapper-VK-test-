@@ -1,7 +1,7 @@
 export enum SmileStatus {
-  onGame,
-  onGameDown,
-  onLMKDown,
-  win,
-  gameOver,
+  onGame = 'onGame',
+  onGameDown = 'onGameDown',
+  onLMKDown = 'onLMKDown',
+  win = 'win',
+  gameOver = 'gameOver',
 }

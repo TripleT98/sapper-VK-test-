@@ -1,28 +1,29 @@
 <ng-container>
   <div class="game">
     <header class="header">
-      <ng-container *ngTemplateOutlet="numbersView;context:{val:(score$ | async)}"></ng-container>
-      <div class="smile-container">
-        <div class="smile">
-          smile
-        </div>
+      <div class="nums">
+        <ng-container *ngFor="let num of (score$ | async)"  [ngTemplateOutlet]="numbersView" [ngTemplateOutletContext]="{val:num}"></ng-container>
       </div>
-      <ng-container *ngTemplateOutlet="numbersView;context:{val:(time$ | async)}"></ng-container>
+      <div class="smile-container">
+        <div #smile class="smile image" [ngStyle]="smile$ | async | getIcon"></div>
+      </div>
+      <div class="nums">
+        <ng-container *ngFor="let num of (time$ | async)"  [ngTemplateOutlet]="numbersView" [ngTemplateOutletContext]="{val:num}"></ng-container>
+      </div>
     </header>
-    <main class="playground">
+    <main class="playground" #playground>
       <ng-container *ngFor="let rowData of (matrix$ | async)" [ngTemplateOutlet]="row" [ngTemplateOutletContext]="{rowData: rowData}"></ng-container>
     </main>
   </div>
   <ng-container *ngTemplateOutlet="sizeForm">
   </ng-container>
-  <div class="image" [style.backgroundPosition]="'10px 10px'">
-
-  </div>
 </ng-container>
 
 <!--Показывать время или очки -->
 <ng-template #numbersView let-numberToDisplay="val">
-  {{numberToDisplay}}
+  <div class="image" [ngStyle]="numberToDisplay | getIcon">
+
+  </div>
 </ng-template>
 
 <!--Ряд ячеек -->
@@ -35,7 +36,7 @@
 
 <!-- Ячейка -->
 <ng-template #cell let-cellData="cellData">
-  <div class="cell image" (click)="cellLeftClickHandler(cellData)" (contextmenu)="$event.preventDefault();cellRightClickHandler(cellData)" [ngStyle]="cellData | getIcon">
+  <div class="cell image" (mousedown)="cellMouseDown(cellData, $event)" (click)="cellLeftClickHandler(cellData)" (contextmenu)="$event.preventDefault();cellRightClickHandler(cellData)" [ngClass]="{opened: cellData.state$.value === 1}" [ngStyle]="cellData | getIcon">
   </div>
 </ng-template>
 

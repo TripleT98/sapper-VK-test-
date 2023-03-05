@@ -1,5 +1,5 @@
 import { Cell, CellStatus, State } from './cell';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 export interface IField {
   readonly fieldHeight$: BehaviorSubject<number>;
@@ -21,6 +21,12 @@ export class Field implements IField{
   readonly bombsAmount$: BehaviorSubject<number> = new BehaviorSubject(0);
   //Коэффициент кол-ва бомб
   readonly bombK: number = 6.4;
+  //Выкидывает true, когда обнаруженна бомба
+  readonly explode$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  //Выкидывает true, когда победа
+  readonly win$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  //Выкидывает значение кол-во бомб - кол-во флагов
+  readonly score$: BehaviorSubject<number> = new BehaviorSubject(0);
 
   constructor(
     height?: number,
@@ -32,7 +38,15 @@ export class Field implements IField{
     if(width){
       this.fieldWidth$.next(width);
     }
-    this.matrix$.next(this.buidMatrix())
+    this.matrix$.subscribe(()=>{this.scanMatrix();});
+    this.matrix$.next(this.buidMatrix());
+    this.score$.next(Math.floor((this.fieldHeight$.value * this.fieldWidth$.value)/this.bombK));
+  }
+
+  public restartGame(){
+    this.explode$.next(false);
+    this.win$.next(false);
+    this.rebuildMatrix();
   }
 
   public startGame(initialCell: Cell){
@@ -47,12 +61,14 @@ export class Field implements IField{
   public setFieldHeight(height: number): boolean{
     this.fieldHeight$.next(height);
     this.rebuildMatrix();
+    this.score$.next(Math.floor((this.fieldHeight$.value * this.fieldWidth$.value)/this.bombK));
     return true;
   }
 
   public setFieldWidth(width: number): boolean{
     this.fieldWidth$.next(width);
     this.rebuildMatrix();
+    this.score$.next(Math.floor((this.fieldHeight$.value * this.fieldWidth$.value)/this.bombK));
     return true;
   }
 
@@ -188,6 +204,44 @@ export class Field implements IField{
     this.rebuildMatrix(matrix);
   }
 
+  public scanMatrix(){
+    //Сканирую матрицу, что бы найти взорванные бомбы, флажки или выяснить сколько ячеек открыто
+    let flagsAmount = 0;
+    let openedCellsAmount = 0;
+    let isBombOpened = false;
+    this.matrix$.value.forEach(row=>{
+      row.forEach(cell=>{
+        const state = cell.state$.value;
+        const status = cell.status$.value;
+        if(state === State.opened && status === CellStatus.bombBlast){
+          isBombOpened = true;
+        }else if(state === State.marked && status === CellStatus.flag){
+          flagsAmount++;
+          if(cell.isBomb){
+            openedCellsAmount++;
+          }
+        }else if(state === State.opened && (status === CellStatus.clear || status === CellStatus.numbered)){
+          openedCellsAmount++;
+        }
+      })
+    })
+    this.score$.next(this.bombsAmount$.value - flagsAmount);
+    if(isBombOpened){
+      this.explode$.next(true);
+      return;
+    }
+    const {width, height} = this.getMatrixSize();
+    const cellsAmount = width*height;
+    if(openedCellsAmount === cellsAmount){
+      this.win$.next(true);
+      return;
+    }
+  }
+
+  public openMatrix(){
+    const matrix = this.matrix$.value;
+
+  }
 }
 
 

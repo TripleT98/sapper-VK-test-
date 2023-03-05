@@ -1,21 +1,26 @@
 .game{
-
   .header{
     display: flex;
     justify-content: space-between;
     padding: 10px;
     border: 1px solid black;
+    .nums{
+      display: flex;
+    }
   }
   .playground{
+    width: max-content;
+    margin: 0px;
+    cursor: pointer;
     .row{
       display: flex;
       width: max-content;
+      margin: 0px;
     }
     .cell{
       width: 20px;
       height: 20px;
       box-sizing: content-box;
-      cursor: pointer;
     }
   }
 }
@@ -28,4 +33,12 @@
 
 .number{
   background-position: 0px 0px;
+}
+
+.smile{
+  cursor: pointer;
+}
+
+.opened{
+  cursor: default;
 }
