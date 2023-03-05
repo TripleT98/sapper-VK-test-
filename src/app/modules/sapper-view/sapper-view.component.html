@@ -44,8 +44,12 @@
 
 <ng-template #sizeForm>
   <div class="form" [formGroup]="form">
-      <input type="number" formControlName="width"><span></span>
-      <input type="number" formControlName="height">
-      <button #button class="button" type="button" name="button" [disabled]="(form.statusChanges | async) === 'INVALID'">submit</button>
+      <div class="">
+        <span>Ширина:</span><input class="input" type="number" formControlName="width"><div class="error">{{form.controls.width.valueChanges | async | getError :form.controls.width}}</div>
+      </div>
+      <div class="">
+        <span>Высота:</span><input class="input" type="number" formControlName="height"><div class="error">{{form.controls.height.valueChanges | async | getError :form.controls.height}}</div>
+      </div>
+      <button #button class="button" type="button" name="button" [disabled]="(form.statusChanges | async) === 'INVALID'">Принять</button>
   </div>
 </ng-template>

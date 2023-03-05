@@ -1,12 +1,15 @@
 import { NgModule } from '@angular/core';
 import { GetIconPipe } from './getIconPipe';
+import { GetErrorPipe } from './getError.pipe';
 
 @NgModule({
   declarations:[
-    GetIconPipe
+    GetIconPipe,
+    GetErrorPipe
   ],
   exports:[
-    GetIconPipe
+    GetIconPipe,
+    GetErrorPipe
   ]
 })
 export class PipesModule{
