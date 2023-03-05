@@ -44,8 +44,8 @@
 
 <ng-template #sizeForm>
   <div class="form" [formGroup]="form">
-      <input type="number" formControlName="width">
+      <input type="number" formControlName="width"><span></span>
       <input type="number" formControlName="height">
-      <button #button class="button" type="button" name="button">submit</button>
+      <button #button class="button" type="button" name="button" [disabled]="(form.statusChanges | async) === 'INVALID'">submit</button>
   </div>
 </ng-template>

@@ -1,5 +1,6 @@
 import { Cell, CellStatus, State } from './cell';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 export interface IField {
   readonly fieldHeight$: BehaviorSubject<number>;
@@ -38,6 +39,7 @@ export class Field implements IField{
     if(width){
       this.fieldWidth$.next(width);
     }
+    this.explode$.pipe(filter(isExplode=>isExplode)).subscribe(()=>{this.openMatrix()});
     this.matrix$.subscribe(()=>{this.scanMatrix();});
     this.matrix$.next(this.buidMatrix());
     this.score$.next(Math.floor((this.fieldHeight$.value * this.fieldWidth$.value)/this.bombK));
@@ -237,10 +239,24 @@ export class Field implements IField{
       return;
     }
   }
-
+  //При проигрыше открываем все неразминированные бомбы + неправильные флажки заменяем зачеркнутыми бомбами
   public openMatrix(){
     const matrix = this.matrix$.value;
-
+    matrix.forEach((row,i)=>{
+      row.forEach((cell,j)=>{
+        const status = cell.status$.value;
+        const state = cell.state$.value;
+        if(state === State.closed && cell.isBomb){
+          cell.setStatus(CellStatus.bombMarked);
+          cell.setState(State.opened);
+          matrix[i][j] = Object.setPrototypeOf({...cell}, Object.getPrototypeOf(cell));
+        }else if(state === State.marked && !cell.isBomb && status === CellStatus.flag){
+          cell.setState(State.opened);
+          cell.setStatus(CellStatus.bombMarkedWrong);
+          matrix[i][j] = Object.setPrototypeOf({...cell}, Object.getPrototypeOf(cell));
+        }
+      })
+    });
   }
 }
 
