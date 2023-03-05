@@ -1,18 +1,24 @@
-<div class="game">
-  <header class="header">
-    <ng-container *ngTemplateOutlet="numbersView;context:{val:(score$ | async)}"></ng-container>
-    <div class="smile-container">
-      <div class="smile">
-        smile
+<ng-container>
+  <div class="game">
+    <header class="header">
+      <ng-container *ngTemplateOutlet="numbersView;context:{val:(score$ | async)}"></ng-container>
+      <div class="smile-container">
+        <div class="smile">
+          smile
+        </div>
       </div>
-    </div>
-    <ng-container *ngTemplateOutlet="numbersView;context:{val:(time$ | async)}"></ng-container>
-  </header>
-  <main class="playground">
+      <ng-container *ngTemplateOutlet="numbersView;context:{val:(time$ | async)}"></ng-container>
+    </header>
+    <main class="playground">
+      <ng-container *ngFor="let rowData of (matrix$ | async)" [ngTemplateOutlet]="row" [ngTemplateOutletContext]="{rowData: rowData}"></ng-container>
+    </main>
+  </div>
+  <ng-container *ngTemplateOutlet="sizeForm">
+  </ng-container>
+  <div class="image" [style.backgroundPosition]="'10px 10px'">
 
-  </main>
-</div>
-
+  </div>
+</ng-container>
 
 <!--Показывать время или очки -->
 <ng-template #numbersView let-numberToDisplay="val">
@@ -20,16 +26,25 @@
 </ng-template>
 
 <!--Ряд ячеек -->
-<ng-template #row let-colunmsAmount="columnsAmount">
+<ng-template #row let-rowData="rowData">
   <div class="row">
-    <ng-container></ng-container>
+    <ng-container *ngFor="let cellData of rowData" [ngTemplateOutlet]="cell" [ngTemplateOutletContext]="{cellData: cellData}"></ng-container>
   </div>
 </ng-template>
 
 
 <!-- Ячейка -->
-<ng-template #cell>
-  <div class="cell">
-    c
+<ng-template #cell let-cellData="cellData">
+  <div class="cell image" (click)="cellLeftClickHandler(cellData)" (contextmenu)="$event.preventDefault();cellRightClickHandler(cellData)" [ngStyle]="cellData | getIcon">
+  </div>
+</ng-template>
+
+<!-- Инпуты изменения ширины и высоты поля -->
+
+<ng-template #sizeForm>
+  <div class="form" [formGroup]="form">
+      <input type="number" formControlName="width">
+      <input type="number" formControlName="height">
+      <button #button class="button" type="button" name="button">submit</button>
   </div>
 </ng-template>

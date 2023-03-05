@@ -14,8 +14,18 @@
     .cell{
       width: 20px;
       height: 20px;
-      box-sizing: border-box;
-      border: 1px solid black;
+      box-sizing: content-box;
+      cursor: pointer;
     }
   }
+}
+
+.image{
+  background-repeat: no-repeat;
+  background-image: url(c:/sapper-VK-test-/src/assets/images/sprite.png);
+  margin: 0px;
+}
+
+.number{
+  background-position: 0px 0px;
 }
